@@ -13,8 +13,42 @@ namespace Utility2D
         public static byte decimalPrecision = 8;
         public static Vector2 origin = new Vector2(0d, 0d);
 
+
+        public static double Distance(Vector2 v0, Vector2 v1) {
+            return Math.Sqrt(Math.Pow((v0.X-v1.X), 2) + Math.Pow((v0.Y - v1.Y), 2));
+        }
+
+        public static double DotProtuct(Vector2 v0, Vector2 v1) {
+            //todo
+            //return v0.Magnitude * v1.Magnitude * Math.Cos(v0.AngleWith(v1));
+        }
+
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)] double _x;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)] double _y;
+
+
+
+        public static Vector2 operator /(Vector2 v0, double dbl) {
+            return new Vector2(v0.X / dbl, v0.Y - dbl);
+        }
+
+        public static Vector2 operator +(Vector2 vo, Vector2 v1) {
+            return new Vector2(vo.X + v1.X, vo.Y + v1.Y);
+        }
+
+        public static Vector2 operator -(Vector2 v0, Vector2 v1) {
+            return new Vector2(v0.X - v1.X, v0.Y - v1.Y);
+        }
+
+        public static bool operator ==(Vector2 v0, Vector2 v1) {
+            return (v0.X == v1.X && v0.Y == v1.Y) ? true : false;
+        }
+
+        public static bool operator !=(Vector2 v0, Vector2 v1) {
+            return (v0.X != v1.X && v0.Y != v1.Y) ? true : false;
+        }
+
 
         public double X {
             get {
@@ -34,9 +68,37 @@ namespace Utility2D
             }
         }
 
+        public double Magnitude { get => Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2));}
+
+
+
+
         public Vector2(double xCoord, double yCoord) {
             _x = Math.Round(xCoord, decimalPrecision);
             _y = Math.Round(yCoord, decimalPrecision);
+        }
+
+
+        public Vector2 Normalized() {
+            return this / Magnitude;
+        }
+
+        public Vector2 Orthogonal() {
+            //todo
+            return new Vector2(0, 0);
+        }
+
+        public double AngleWith(Vector2 other) {
+            return Math.Acos( DotProtuct(this, other) / (Magnitude * other.Magnitude) );
+        }
+
+
+        public override bool Equals(object obj) {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode() {
+            return base.GetHashCode();
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Utility2D
         public static byte decimalPrecision = 8;
         public static Position2 origin = new Position2(0d, 0d);
 
+
         public static Position2 operator +(Position2 pos0, Position2 pos1) {
             return new Position2(pos0.X + pos1.X, pos0.Y + pos1.Y);
         }
