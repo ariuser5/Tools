@@ -7,20 +7,25 @@ using System.Threading.Tasks;
 
 namespace Utility2D
 {
-    public struct Vector2 : ICoordinate2
-    {
+    public struct Vector2 {
 
-        public static byte decimalPrecision = 8;
+        public enum DirectionRule { RightHandRule, LeftHandRule }
+
+        public static byte decimalMargin = 8;
+        public static byte decimalPrecision = 15;
+        public static DirectionRule referenceDirection = DirectionRule.RightHandRule;
+
         public static Vector2 origin = new Vector2(0d, 0d);
+
+        private static int _Dir => referenceDirection == DirectionRule.RightHandRule ? 1 : -1;
 
 
         public static double Distance(Vector2 v0, Vector2 v1) {
             return Math.Sqrt(Math.Pow((v0.X-v1.X), 2) + Math.Pow((v0.Y - v1.Y), 2));
         }
 
-        public static double DotProtuct(Vector2 v0, Vector2 v1) {
-            //todo
-            //return v0.Magnitude * v1.Magnitude * Math.Cos(v0.AngleWith(v1));
+        public static double DotProtuct(Vector2 v0, Vector2 v1) { 
+            return (v0.X * v1.X + v0.Y * v1.Y) * _Dir;
         }
 
 
@@ -42,11 +47,15 @@ namespace Utility2D
         }
 
         public static bool operator ==(Vector2 v0, Vector2 v1) {
-            return (v0.X == v1.X && v0.Y == v1.Y) ? true : false;
+            double margin = 1 * 10 ^ (-decimalMargin);
+
+            return Math.Abs(v0.X - v1.X) <= margin && Math.Abs(v0.Y - v1.Y) <= margin;
         }
 
         public static bool operator !=(Vector2 v0, Vector2 v1) {
-            return (v0.X != v1.X && v0.Y != v1.Y) ? true : false;
+            double margin = 1 * 10 ^ (-decimalMargin);
+
+            return Math.Abs(v0.X - v1.X) > margin || Math.Abs(v0.Y - v1.Y) > margin;
         }
 
 
@@ -84,14 +93,23 @@ namespace Utility2D
         }
 
         public Vector2 Orthogonal() {
-            //todo
-            return new Vector2(0, 0);
+            return Rotation(Math.PI/2);
         }
 
         public double AngleWith(Vector2 other) {
-            return Math.Acos( DotProtuct(this, other) / (Magnitude * other.Magnitude) );
+            return Math.Round(
+                Math.Acos( DotProtuct(this, other) / (Magnitude * other.Magnitude) )
+                , decimalPrecision
+            );
         }
 
+        public Vector2 Rotation(double angle) {
+            //todo
+        }
+
+        public Vector2 RotationAround(Vector2 other, double angle) {
+            //todo
+        }
 
         public override bool Equals(object obj) {
             return base.Equals(obj);
