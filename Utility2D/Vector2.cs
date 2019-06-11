@@ -29,8 +29,8 @@ namespace Utility2D
         }
 
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)] double _x;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)] double _y;
+        double _x;
+        double _y;
 
 
 
@@ -47,31 +47,27 @@ namespace Utility2D
         }
 
         public static bool operator ==(Vector2 v0, Vector2 v1) {
-            double margin = 1 * 10 ^ (-decimalMargin);
+            double margin = 1 * Math.Pow(10, -decimalMargin);
 
             return Math.Abs(v0.X - v1.X) <= margin && Math.Abs(v0.Y - v1.Y) <= margin;
         }
 
         public static bool operator !=(Vector2 v0, Vector2 v1) {
-            double margin = 1 * 10 ^ (-decimalMargin);
+            double margin = 1 * Math.Pow(10, -decimalMargin);
 
             return Math.Abs(v0.X - v1.X) > margin || Math.Abs(v0.Y - v1.Y) > margin;
         }
 
 
         public double X {
-            get {
-                return _x;
-            }
+            get => _x;
             set {
                 _x = Math.Round(value, decimalPrecision);
             }
         }
 
         public double Y {
-            get {
-                return _y;
-            }
+            get => _y;
             set {
                 _y = Math.Round(value, decimalPrecision);
             }
@@ -96,6 +92,10 @@ namespace Utility2D
             return Rotation(Math.PI/2);
         }
 
+        public Vector2 RelativeTo(Vector2 other) {
+            return this - other;
+        }
+
         public double AngleWith(Vector2 other) {
             return Math.Round(
                 Math.Acos( DotProtuct(this, other) / (Magnitude * other.Magnitude) )
@@ -104,11 +104,18 @@ namespace Utility2D
         }
 
         public Vector2 Rotation(double angle) {
-            //todo
+            return new Vector2() {
+                X = X * Math.Cos(angle) - Y * Math.Sin(angle),
+                Y = X * Math.Sin(angle) + Y * Math.Cos(angle)
+            };
         }
 
         public Vector2 RotationAround(Vector2 other, double angle) {
-            //todo
+            return RelativeTo(other).Rotation(angle) + other;
+        }
+
+        public Line ToLine() {
+            return new Line(0, 0, X, Y);
         }
 
         public override bool Equals(object obj) {
@@ -117,6 +124,10 @@ namespace Utility2D
 
         public override int GetHashCode() {
             return base.GetHashCode();
+        }
+
+        public override string ToString() {
+            return string.Format("[{0:N3}, {1:N3}]", X, Y);
         }
     }
 }
